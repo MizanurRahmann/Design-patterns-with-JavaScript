@@ -1,5 +1,5 @@
 # What is Design Pattern?
-কোনো application তৈরী করার সময়, আমরা ভিন্ন ভিন্ন জায়গায় কিছু একই রকম সমস্যার সম্মুখিন হলে, সমস্যাগুলোর সমাধান এর জন্য যদি একটা reusable pattern design করা যায়, যা ঐ সমস্যাগুলোর জন্য একটা ভালো সমাধান দিতে পারে। তবে advanced এই সমাধানকেই আমরা Design pattern বলি।
+কোনো application তৈরী করার সময়, আমরা ভিন্ন ভিন্ন জায়গায় কিছু একই রকম সমস্যার সম্মুখীনন হলে, সমস্যাগুলোর সমাধান এর জন্য যদি একটা reusable pattern design করা যায়, যা ঐ সমস্যাগুলোর জন্য একটা ভালো সমাধান দিতে পারে। তবে advanced এই সমাধানকেই আমরা Design pattern বলি।
 সহজ কথায়, **Design pattern হলো একটা কমন সমস্যার জন্য তৈরী করা reusable সমাধান।** ডিজাইন প্যাটার্ন বোঝা বা এর সাথে পরিচিত হওয়াটা বেশ প্রয়োজন কেননাঃ 
 * Pattern হলো নির্দিষ্ট সমস্যার জন্য প্রমানিত সলুশান।
 * Application development processএর সময় এটা ছোটো খাটো issue থেকে বাচাতে সাহায্য করে যেটা ভবিষ্যতে application এর বড় ক্ষতি করতে পারতো
@@ -12,8 +12,8 @@
 * [**Creational**](#Creational-Design-Patterns)
     - [Abstract Factory](#Abstract-Factory)
     - [Builder](#Builder)
-    - Factory Method
-    - Prototype
+    - [Factory Method](#Factory-Method)
+    - [Prototype](#Prototype)
     - Singletone
 * **Structural**
     -  Adapter
@@ -97,11 +97,11 @@ run();
 ```
 
 ## Builder
-বিভিন্ন কমপ্লেক্স object-এর বিস্তারিত ডেফিনেশন না জেনে, শুধুমাত্র টাইপ ও কনগটেন্ট জেনেই ঐ কমপ্লেক্স object-গুলো তৈরী করতে পারে যে pattern তাকে Builder pattern বলে।
-
--"builder" বিভিন্ন কমপ্লেক্স object তৈরী ও object-গুলোর বিভিন্ন intermediate state মেইন্টেইন করতে পারে। আর অব্জেক্ট তৈরী এবং তাকে মেইন্টেইন এর মাধ্যমে তৈরী করে বিভিন্ন প্রোডাক্ট। আর প্রোডাক্ট তৈরী শেষ হলে ক্লায়েন্ট সেই ফলাফল (তৈরীকৃত প্রোডাক্ট) "builder" থেকে retrieve করতে পারে।
+যে pattern-এ একটি অব্জেক্টের (Builder object-এর) সহযোগিতায় বিভিন্ন কমপ্লেক্স object-এর কমপ্লেক্স অপারেশান এর ডেফিনেশন না জেনেই সে অব্জেক্টের অপারেশঙ্গুলো নিয়ন্ত্রন করতে পারা যায় তাই-ই Builder pattern
 
 এভাবে object তৈরীর মূল উদ্দেশ্য হলো, client সাইটে বিভিন্ন অপারেশনগুলো সহজ করা। আর উপকারিতা হলো, একজন client বিভিন্ন কমপ্লেক্স object-গুলোর ডেফিনেশাঙ্গুলো না জেনেউ সে object-কে সহজে ব্যবহার করতে পারবে।
+
+-"builder" বিভিন্ন কমপ্লেক্স object তৈরী ও object-গুলোর বিভিন্ন intermediate state মেইন্টেইন করতে পারে। আর অব্জেক্ট তৈরী এবং তাকে মেইন্টেইন এর মাধ্যমে তৈরী করে বিভিন্ন প্রোডাক্ট। আর প্রোডাক্ট তৈরী শেষ হলে ক্লায়েন্ট সেই ফলাফল (তৈরীকৃত প্রোডাক্ট) "builder" থেকে retrieve করতে পারে।
 
 ### Example :
 মনেকরি, মোঃ মফিজ সাহেব, তার আইস্ক্রিম ও কেকের কারখানায় জন্য 'আব্দুস সালাম' নামের একজন লোককে ম্যানেজার হিসেবে নিয়োগ করেছে। এখন এটা স্বাভাবিক যে সালাম ভাই এর জন্য প্রতিটা কারখানায় আইস্ক্রিম আর কেক আলাদা আলাদা ভাবে তৈরীর প্রতিটা স্টেপ মেইন্টেইন করা সম্ভব না। 
@@ -114,6 +114,7 @@ run();
 এক্ষেত্রে কিন্তু সালাম সাহেবের জন্য দুইটা ভিন্ন কারখানায় পণ্যের জন্য কি কি উপাদান লাগবে, কিভাবে বানাবে বা কিভাবে প্যাকেট করতে হবে তা জানার প্রয়োজন নাই। তিনি শুধু কমপ্লেক্স এই কাজগুলোর জন্য কর্মি ঠিক করে (object তৈরী করে) বাহিরে থেকেই বিভিন্ন কাজগুলো(কমপ্লেক্স অপারেশঙ্গুলো) নিয়ন্ত্রন করতে পারবে। যেটা Builder প্যাটার্ন এর একটি উদাহরণ।
 
 ``` javascript
+//Builder object
 function Manager() {
     this.productControll = function(builder) {
         builder.collectIngridents();
@@ -177,4 +178,92 @@ function run(){
     SalamVai.productControll(cakeShef);
 }
 run();
+```
+
+## Factory Method
+application-এ ক্লায়েন্টের instruction অনুযায়ী বিভিন্ন object তৈরীর প্রয়োজন হয়। আর আমরা জানি এই object-গুলো new keyword এর মাধ্যমে constructor ফাংশান কল করেই করা যায়। 
+
+কিন্তু অনেক সময় দেখা যায়... application-এ একটি নির্দিষ্ট টাইপের অবস্থার জন্য কি object তৈরী করতে হবে তা ক্লায়েন্ট জানতে পারে না। বা নিরাপত্তার জন্য এই বিষয়টি ক্লায়েন্টকে জানানো হয় না। তখন প্রয়োজনীয় অব্জেক্ট তৈরীর দায়িত্ব একটি ফাংশনকে দেয়া হয়। যে ফাংশন আর্গুমেন্ট হিসেবে নেয় নির্দিষ্ট "টাইপ" এবং সে টাইপের জন্য যে object তৈরী করতে হবে তা তৈরী করে return করে।
+
+ঐ application-গুলোতে Factory Method ব্যবহার হয় যেখানে, তৈরীকৃত বিভিন্ন অব্জেক্টের টাইপ আলাদা কিন্তু প্রধান বৈশিষ্ট একই।
+
+### Example
+তো আবার করিম সাহেবের গল্পে ফিরে আসি। করিম সাহেবের দুই কারখানা বেশ ভালোই চলছে। কিন্তু তিনি তার কারখানার আরো নতুন কর্মি নিয়োগ করতে চাইলো। যেখানে করিম সাহেব চাচ্ছেন তার কারখানায় দুই ধরনের কর্মি থাকবে। (১) ফুলটাইম (২) পার্টটাইম।
+তাদের বেতন setup করার জন্য আমরা Factory Method ব্যবহার করতে পারি। আমাদের উদাহরণে createEmployee ফাংশনটাই হলো Factory Method। যেটি একটা টাইপ গ্রহন করছে ও সে টাইপ অনুযায়ী সিদ্ধান্ত নিচ্ছে কি ধরনের অব্জেক্ট তৈরী করতে হবে। একই সাথে অব্জেক্টগুলোতে প্রয়োজনীয় তথ্যও যুক্ত করে দিচ্ছে।
+
+```javascript
+function Factory() {
+    //Factory Method
+    this.createEmployee = function (type) {
+        var employee;
+ 
+        if (type === "fulltime") {
+            employee = new FullTime();
+        } else{
+            employee = new PartTime();
+        }
+        employee.type = type;
+        employee.say = function () {
+            console.log(this.type + ": rate " + this.hourly + "/hour");
+        }
+        return employee;
+    }
+}
+ 
+var FullTime = function () {
+    this.hourly = "৳40,0000";
+};
+ 
+var PartTime = function () {
+    this.hourly = "৳15,000";
+};
+
+function run() {
+    var employees = [];
+    var factory = new Factory();
+ 
+    // 	Creates an instance of several derived classes
+    employees.push(factory.createEmployee("fulltime"));
+    employees.push(factory.createEmployee("parttime"));
+    employees.push(factory.createEmployee("parttime"));
+    employees.push(factory.createEmployee("fulltime"));
+    employees.push(factory.createEmployee("fulltime"));
+    
+    
+    for (var i = 0, len = employees.length; i < len; i++) {
+        employees[i].say();
+    }
+}
+run();
+```
+
+---
+Abstract Factory আর Factory Method নিয়ে কনফিউশান লাগতেছে ? :confused:
+- Abstract Factory : Creates an instance of several families of classes.
+- Factory Method : Creates an instance of several derived classes.
+---
+
+## Prototype
+Prototype pattern, initialized object তৈরী করে। 
+-- এ প্যাটার্নে কিছু নতুন অব্জেক্ট তৈরীর পর সেটাকে non-initialized অবস্থায় না রেখে একটা prototype বা sample object দ্বারা কপি করে initialized করা হয়।
+
+অনেকক্ষেত্রে, ডাটাবেজের default value সাথে match করার জন্য, আমাদের এধরনের initialized object তৈরীর প্রয়োজন হয়। এসবক্ষেত্রে Prototype pattern বেশ উপকারি।
+
+জাভাস্ক্রিপ্টের জন্য Prototype pattern অনেক বেশি গুরুত্বপূর্ন ও উপকারী কারন, এখানে  classic object-oriented inheritance পরিবর্তে prototypal inheritance ব্যবহার করা হয়।
+
+### Example
+```javascript
+//A prototype
+const fullTimeEmployee = {
+    type: "fulltime",
+    salary: "৳40,0000",
+    startingTime: "08:00AM",
+    EndingTime: "04:00PM",
+};  
+
+//Create new initialized object
+const employee_1 = Object.create(fullTimeEmployee, { name: { value: 'Biddut vai' } });
+
+console.log(`${employee_1.name} is a ${employee_1.type} worker.`);
+console.log(`${employee_1.name}'s working schedule ${employee_1.startingTime} to ${employee_1.EndingTime}`);
 ```
