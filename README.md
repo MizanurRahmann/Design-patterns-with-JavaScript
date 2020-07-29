@@ -14,8 +14,8 @@
     - [Builder](#Builder)
     - [Factory Method](#Factory-Method)
     - [Prototype](#Prototype)
-    - Singletone
-* **Structural**
+    - [Singleton](#Singleton)
+* [**Structural**](#Structural-Design-Patterns)
     -  Adapter
     - Bridge
     - Composite
@@ -38,10 +38,13 @@
 
 
 
+
+
+
+
 # #Creational Design Patterns
 Creational pattern মূলত object তৈরীর মেকানিজমগুলোর নিয়ন্ত্রন প্রক্রিয়ার উপর ফোকাস করে।
 কোনো উদ্ভূত সমস্যার জন্য এই প্যাটার্নের basic approach টা হচ্ছে, প্রোজেক্টে কিছু কপ্লিক্সিটি (যাকে আমরা প্যাটার্ন বলছি) যুক্ত করে object creation process টা controll করা যাতে করে সমস্যার একটা সুষ্ঠ সমাধান দেয়া সম্ভব হয়। এই ক্যাটাগরীর অন্তর্ভূক্ত pattern গুলো হলোঃ Abstract Factory, Builder,  Factory Method, Prototype and Singleton.
-
 
 
 ## Abstract Factory
@@ -187,7 +190,7 @@ application-এ ক্লায়েন্টের instruction অনুযায়
 
 ঐ application-গুলোতে Factory Method ব্যবহার হয় যেখানে, তৈরীকৃত বিভিন্ন অব্জেক্টের টাইপ আলাদা কিন্তু প্রধান বৈশিষ্ট একই।
 
-### Example
+### Example :
 তো আবার করিম সাহেবের গল্পে ফিরে আসি। করিম সাহেবের দুই কারখানা বেশ ভালোই চলছে। কিন্তু তিনি তার কারখানার আরো নতুন কর্মি নিয়োগ করতে চাইলো। যেখানে করিম সাহেব চাচ্ছেন তার কারখানায় দুই ধরনের কর্মি থাকবে। (১) ফুলটাইম (২) পার্টটাইম।
 তাদের বেতন setup করার জন্য আমরা Factory Method ব্যবহার করতে পারি। আমাদের উদাহরণে createEmployee ফাংশনটাই হলো Factory Method। যেটি একটা টাইপ গ্রহন করছে ও সে টাইপ অনুযায়ী সিদ্ধান্ত নিচ্ছে কি ধরনের অব্জেক্ট তৈরী করতে হবে। একই সাথে অব্জেক্টগুলোতে প্রয়োজনীয় তথ্যও যুক্ত করে দিচ্ছে।
 
@@ -251,7 +254,7 @@ Prototype pattern, initialized object তৈরী করে।
 
 জাভাস্ক্রিপ্টের জন্য Prototype pattern অনেক বেশি গুরুত্বপূর্ন ও উপকারী কারন, এখানে  classic object-oriented inheritance পরিবর্তে prototypal inheritance ব্যবহার করা হয়।
 
-### Example
+### Example :
 ```javascript
 //A prototype
 const fullTimeEmployee = {
@@ -267,3 +270,52 @@ const employee_1 = Object.create(fullTimeEmployee, { name: { value: 'Biddut vai'
 console.log(`${employee_1.name} is a ${employee_1.type} worker.`);
 console.log(`${employee_1.name}'s working schedule ${employee_1.startingTime} to ${employee_1.EndingTime}`);
 ```
+
+## Singleton
+Singleton pattern হলো এমন একটি special pattern যা কোনো অব্জেক্টের একের অধিক অব্জেক্ট তৈরী হতে বাধা দেয়। অর্থাত, অব্জেক্টের শুধুমাত্র একটি instance-ই তৈরী হতে দেয়। আর তখন ঐ instance-কে বলা হয় singleton
+
+এটা কাজ করে এভাবে যেঃ যদি singleton object-এর কোনো instance না থাকে তবে নতুন একটা instance তৈরী করবে। আর যদি আগে থেকেই একটা instance থেকে থাকে, তবে নতুন করে আর instance তৈরী হতে দিবে না।
+
+যখন, কোনো একটা single place থেকে system-wide action পরিচালনার প্রয়োজন পরে, তখন Singleton pattern বেশ উপকারী।
+
+### Example :
+মফিজ সাহেব এর আইস্ক্রিম ও কেকের কারখানার ম্যানেজার নিয়োগ পদ্ধতির জন্য কিন্তু আমরা এই প্যাটার্ন ব্যবহার করতে পারি।\
+যদি ম্যানেজার না থাকে তবে নতুন একটা ম্যানেজার অব্জেক্ট তৈরী করবে। আর যদি আগে থেকেই ম্যানেজার থেকেই থাকে তবে অন্য কেউ ম্যানেজার দাবি করলেউ... ম্যানেজার হিসেবে যে আছে তার ইনফরমেশান ই দেখাবে।
+
+```javascript
+class Manager {
+    constructor(name) {
+      if (Manager.exists) {
+        return Manager.instance;
+      }
+      this.name = name;
+      Manager.instance = this;
+      Manager.exists = true;
+      return this;
+    }
+  
+    getManagerName() {
+      return this.name;
+    }
+  }
+  
+  const salamVai = new Manager('Abdus Salam');
+  console.log(salamVai.getManagerName());
+  
+  const gutibajSalam = new Manager('Gutibaj Salam');
+  console.log(gutibajSalam.getManagerName());
+```
+
+
+
+
+
+
+
+
+
+# #Structural Design Patterns
+Structural pattern, object composition এর উপর ফোকাস করে সাথে সাথে ভিন্ন ভিন্ন object এর মধ্যে থাকা সম্পর্কগুলো বোঝার জন্য - একটা সহজ পদ্ধতি খুজে বের করার চেষ্টা করে।
+এই প্যাটার্নগুলো নিশ্চয়তা দেয় যে, যদি আমরা এপ্লিকাশনের কোনো একটা ছোটো অংশকে পরিবর্তন করি তবে তা সম্পূর্ন structure কে পরিবর্তন করে ফেলবেনা।
+এই ক্যাটাগরীর অন্তর্ভূক্ত pattern গুলো হলোঃ Adapter, Bridge, Composite, Decorator, Facade, Flyweight and Proxy.
+
