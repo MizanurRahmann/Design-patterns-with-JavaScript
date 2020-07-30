@@ -16,7 +16,7 @@
     - [Prototype](#Prototype)
     - [Singleton](#Singleton)
 * [**Structural**](#Structural-Design-Patterns)
-    -  Adapter
+    -  [Adapter](#Adapter)
     - Bridge
     - Composite
     - Decorator
@@ -318,4 +318,73 @@ class Manager {
 Structural pattern, object composition এর উপর ফোকাস করে সাথে সাথে ভিন্ন ভিন্ন object এর মধ্যে থাকা সম্পর্কগুলো বোঝার জন্য - একটা সহজ পদ্ধতি খুজে বের করার চেষ্টা করে।
 এই প্যাটার্নগুলো নিশ্চয়তা দেয় যে, যদি আমরা এপ্লিকাশনের কোনো একটা ছোটো অংশকে পরিবর্তন করি তবে তা সম্পূর্ন structure কে পরিবর্তন করে ফেলবেনা।
 এই ক্যাটাগরীর অন্তর্ভূক্ত pattern গুলো হলোঃ Adapter, Bridge, Composite, Decorator, Facade, Flyweight and Proxy.
+
+## Adapter
+Adapter pattern একটা interface কে অন্য interface-এ রূপান্তর করে। (এখানে interface বলতে আসলে একটা object এর প্রোপার্টি আর মেথড বুঝানো হচ্ছে।) Adapter pattern-কে Wrapper Pattern-ও বলে।
+
+Adapter pattern ব্যবহার করা হয় ঐ জায়গা গুলোতে, যেখানে পূর্বের component-গুলোর সাথে নতুন component গুলোকে integrat করার প্রয়োজন হয়। যেমনঃ কোনো এপ্লিকেশানে কোনো একটা interface-কে improve করার জন্য পূর্বের লেখা কোডকে পূনরায় লেখার প্রয়োজন হলো। কিন্তু অন্য interface-গুলো যদি পরিবর্তিত interface-এর পূর্বের কোডের উপর নির্ভর করে, তখন আমরা এই প্যটার্ন ব্যবহার করতে পারি।
+
+### Example
+মনে করি একটা এপ্লিকেশানে, একটাই class আছে এবং যে class-এ দুইটা মেথড আছে, যোগ ও বিয়োগ। আমরা এই class-এর জন্য কোড লিখে ফেললাম। কিন্তু, পরে দেখা গেলো আমরা class-এর জন্য যে কোড লিখেছি তা আরো ইম্প্রুভ করতে পারতাম বা অন্যভাবে সাজাইলে সেটা ভালো হতো। তাই আমরা এবার সিদ্ধান্ত নিলাম নতুনভাবে আবার আরেকটা class(improved) লিখবো.. যার কাজ পূর্বের মতোই (যোগ আর বিয়োগ)।\
+কিন্তু সমস্যা হচ্ছে, অনেক ইউজারই এটাকে আগেই ইউজ করা শুরু করেছে। তাই, তাদের app-এ যে instance ব্যবহার হচ্ছে তা পূর্বের class-এর। তাই আমরা পূর্বের class-কে এপ্লিকেশান থেকে বাদ দিতে পারি না। 
+
+তাই যেটা করতে হবে তা হলো, একটা Adapter class লিখতে হবে... যা পূর্বের interface-কে নতুন interface-এ translate করে দিবে।
+
+```javascript
+// old interface
+class OldApp {
+    constructor() {
+      this.operations = function(x, y, type) {
+        switch (type) {
+          case 'add':
+            return x + y;
+          case 'sub':
+            return x - y;
+          default:
+            return NaN;
+        }
+      };
+    }
+  }
+  
+  // new interface
+  class NewApp {
+    constructor() {
+      this.add = function(x, y) {
+        return x + y;
+      };
+      this.sub = function(x, y) {
+        return x - y;
+      };
+    }
+  }
+  
+  // Adapter Class
+  class AppAdapter {
+    constructor() {
+      const newCalc = new NewCalculator();
+  
+      this.operations = function(term1, term2, operation) {
+        switch (operation) {
+          case 'add':
+            // using the new implementation under the hood
+            return newCalc.add(term1, term2);
+          case 'sub':
+            return newCalc.sub(term1, term2);
+          default:
+            return NaN;
+        }
+      };
+    }
+  }
+  // usaage
+  const oldInstance = new OldApp();
+  console.log(oldInstance.operations(7, 5, 'add'));
+  
+  const newInstance = new NewApp();
+  console.log(newInstance.add(10, 5));
+  
+  const adaptedInstance = new AppAdapter();
+  console.log(adaptedInstance.operations(10, 13, 'add'));
+```
 
