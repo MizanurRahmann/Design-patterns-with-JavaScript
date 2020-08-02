@@ -17,13 +17,13 @@
     - [Singleton](#Singleton)
 * [**Structural**](#Structural-Design-Patterns)
     -  [Adapter](#Adapter)
-    - Bridge
+    - [Bridge](#Bridge)
     - Composite
     - Decorator
     - Facade
     - Flyweight
     - Proxy
-* **Behavioral**
+* [**Behavioral**](#Behavioral-Design-Patterns)
     - Chain of Resp
     - Command
     - Interpreter
@@ -35,17 +35,14 @@
     - Strategy
     - Template Method
     - Visitor
-
-
-
-
-
+<br>
+<br>
 
 
 # #Creational Design Patterns
 Creational pattern মূলত object তৈরীর মেকানিজমগুলোর নিয়ন্ত্রন প্রক্রিয়ার উপর ফোকাস করে।
 কোনো উদ্ভূত সমস্যার জন্য এই প্যাটার্নের basic approach টা হচ্ছে, প্রোজেক্টে কিছু কপ্লিক্সিটি (যাকে আমরা প্যাটার্ন বলছি) যুক্ত করে object creation process টা controll করা যাতে করে সমস্যার একটা সুষ্ঠ সমাধান দেয়া সম্ভব হয়। এই ক্যাটাগরীর অন্তর্ভূক্ত pattern গুলো হলোঃ Abstract Factory, Builder,  Factory Method, Prototype and Singleton.
-
+<br>
 
 ## Abstract Factory
 Abstract factory, একই বিষয়ের দ্বারা সম্পর্কযুক্ত বিভিন্ন অব্জেক্ট তৈরী করে। সহজ কথায়, এটা এমন একটা প্যাটার্ন যেখানে একটি Factory object থাকবে - যার কাজ হলো অন্য আরেক রকমের অব্জেক্ট তৈরী করা।
@@ -98,6 +95,8 @@ function run() {
 }
 run();
 ```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
 
 ## Builder
 যে pattern-এ একটি অব্জেক্টের (Builder object-এর) সহযোগিতায় বিভিন্ন কমপ্লেক্স object-এর কমপ্লেক্স অপারেশান এর ডেফিনেশন না জেনেই সে অব্জেক্টের অপারেশঙ্গুলো নিয়ন্ত্রন করতে পারা যায় তাই-ই Builder pattern
@@ -182,6 +181,8 @@ function run(){
 }
 run();
 ```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
 
 ## Factory Method
 application-এ ক্লায়েন্টের instruction অনুযায়ী বিভিন্ন object তৈরীর প্রয়োজন হয়। আর আমরা জানি এই object-গুলো new keyword এর মাধ্যমে constructor ফাংশান কল করেই করা যায়। 
@@ -245,6 +246,9 @@ Abstract Factory আর Factory Method নিয়ে কনফিউশান ল
 - Abstract Factory : Creates an instance of several families of classes.
 - Factory Method : Creates an instance of several derived classes.
 ---
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
 
 ## Prototype
 Prototype pattern, initialized object তৈরী করে। 
@@ -270,6 +274,9 @@ const employee_1 = Object.create(fullTimeEmployee, { name: { value: 'Biddut vai'
 console.log(`${employee_1.name} is a ${employee_1.type} worker.`);
 console.log(`${employee_1.name}'s working schedule ${employee_1.startingTime} to ${employee_1.EndingTime}`);
 ```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
 
 ## Singleton
 Singleton pattern হলো এমন একটি special pattern যা কোনো অব্জেক্টের একের অধিক অব্জেক্ট তৈরী হতে বাধা দেয়। অর্থাত, অব্জেক্টের শুধুমাত্র একটি instance-ই তৈরী হতে দেয়। আর তখন ঐ instance-কে বলা হয় singleton
@@ -305,12 +312,9 @@ class Manager {
   const gutibajSalam = new Manager('Gutibaj Salam');
   console.log(gutibajSalam.getManagerName());
 ```
-
-
-
-
-
-
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+<br>
 
 
 
@@ -387,4 +391,77 @@ class OldApp {
   const adaptedInstance = new AppAdapter();
   console.log(adaptedInstance.operations(10, 13, 'add'));
 ```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
 
+
+## Bridge
+Bridge pattern একটি high level ডিজাইন প্যাটার্ন  যার মেইন উদ্দেশ্য হলো দুইটা ভিন্ন abstraction level-এ আরো better code লেখা। এটি client আর service-কে একই সাথে কাজ করতে সাহায্য করে। যেখানে প্রতেকেরই নিজস্ব আলাদা আলাদা কমপনেন্ট থাকে। এই প্যাটার্নকে অনেক সময় Double Adapter pattern-ও বলা হয়ে থাকে।
+
+Bridge pattern-এর একটা উদাহরণ হলোঃ  একটি application (the client) আর একটি database driver (the service) এর মধ্যে interaction. application এ একটি well-defined database API লেখা হয় ডাটাবেজ থেকে তথ্য কালেক্ট করতে। কিন্তু বিপরীত দিকে যে ড্রাইভার গুলোর জন্য API লেখা হলো তাদের implementation একেবারেই আলাদা। অথচ তারা একই সাথে কাজ করতে পারে।
+
+driver development এর জন্য এই প্যাটার্নটি অনেক গুরুত্বপূর্ন হলেউ জাভাস্ক্রিপ্টে এ প্যাটার্নটি খুব একটা ব্যবহার হয় না।
+
+### Example
+Gestures (finger movements) এবং Mouse দুইটাই ভিন্ন ভিন্ন ইনপুট ডিভাইস, কিন্তু তাদের actions map একই রকম। যেমন আমরা যদি output instructions দেখি তবেঃ click, move, drag ইত্যাদি হলো তাদের action.\
+আবার Screen এবং Audio দুইটা ভিন্ন ভিন্ন output device, কিন্তু তাদের respond-এ একই ধরনের instruction দেখা যায়(যদিও তাদের effects সম্পূর্নভাবে ভিন্ন). The Bridge pattern যেকোনো input device কে যেকোনো output device এর সাথে একই সাথে interaction করতে সাহায্য করে।
+
+```javascript
+// input devices
+var Gestures = function (output) {
+    this.output = output;
+ 
+    this.tap = function () { this.output.click(); }
+    this.swipe = function () { this.output.move(); }
+    this.pan = function () { this.output.drag(); }
+    this.pinch = function () { this.output.zoom(); }
+};
+ 
+var Mouse = function (output) {
+    this.output = output;
+ 
+    this.click = function () { this.output.click(); }
+    this.move = function () { this.output.move(); }
+    this.down = function () { this.output.drag(); }
+    this.wheel = function () { this.output.zoom(); }
+};
+ 
+
+// output devices
+var Screen = function () {
+    this.click = function () { console.log("Screen select"); }
+    this.move = function () { console.log("Screen move"); }
+    this.drag = function () { console.log("Screen drag"); }
+    this.zoom = function () { console.log("Screen zoom in"); }
+};
+ 
+var Audio = function () {
+    this.click = function () { console.log("Sound oink"); }
+    this.move = function () { console.log("Sound waves"); }
+    this.drag = function () { console.log("Sound screetch"); }
+    this.zoom = function () { console.log("Sound volume up"); }
+};
+ 
+function run() {
+ 
+    var screen = new Screen();
+    var audio = new Audio();
+ 
+    var hand = new Gestures(screen);
+    var mouse = new Mouse(audio);
+ 
+    hand.tap();
+    hand.swipe();
+    hand.pinch();
+    
+    mouse.click();
+    mouse.move();
+    mouse.wheel();
+}
+run();
+```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
+## #Behavioral Design Patterns
+Behavorial pattern একটা system-এ থাকা বিভিন্ন object গুলোর মধ্যে সম্পর্ক এবং যোগাযোগ পদ্ধতিকে improve করার চেষ্টা করে। এই ক্যাটাগরীর অন্তর্ভূক্ত pattern গুলো হলোঃ Chain of Resp, Command, Interpreter, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor.
