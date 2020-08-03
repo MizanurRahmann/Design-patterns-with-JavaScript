@@ -18,7 +18,7 @@
 * [**Structural**](#Structural-Design-Patterns)
     -  [Adapter](#Adapter)
     - [Bridge](#Bridge)
-    - Composite
+    - [Composite](#Composite)
     - Decorator
     - Facade
     - Flyweight
@@ -461,6 +461,71 @@ function run() {
 run();
 ```
 [**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
+## Composite
+এ pattern এমন object তৈরী করে যার properties-গুলো premetive অথবা বিভিন্ন object এর কালেকশন। অর্থাত অব্জেক্টের প্রতিটি আইটেম, নিজস্ব আইটেম ধারন করতে পারে। ধারনকৃত আইটেম গুলোউ আবার বিভিন্ন আইটেম ধারন করতে পারে (নেস্টেড স্ট্রাকচার এর মতো)। 
+এক্ষেত্রে তৈরীকৃত অব্জেকট গুলোর গঠন হবেঃ ট্রি এর মতো। যেখানে, রুট হবে একটি অবেজক্ট যার নোড গুলো হবে কম্পনেন্ট আবার ট্রি তে যেমন প্রত্যেকটা নোডের সাথে অন্য নোড কানেক্টেড থাকতে পারে, এখেত্রেও প্রত্যেক কম্পনেন্ট অব্জেক্টের আবার আলাদা কম্পনেন্ট (বা নোড) থাকতে পারবে।
+<br>
+<p align="center"><img src='./images/Composit.png'/></p>
+
+### Example
+আমরা উদাহরণ হিসেবে একটি Node object ব্যবহার করবো। যার instance-গুলোর একটা নির্দিষ্ট নাম থাকবে এবং তার চাইল্ড কতোগুলো তার একটা লিস্ট থাকবে। একই সাথে এই object-এর তিনটি মেথড থাকবে addChild: Child লিস্টে নতুন চাইল্ড add করবে, removeChild: লিস্ট থেকে কোনো চাইল্ডকে রিমুভ করবে এবং getChild: চাইল্ডের লিস্ট থেকে কোনো চাইলডের information ব্যবহার করতে দিবে।
+
+```javascript
+class Node{
+    constructor(name){
+        this.children = [];
+        this.name = name;
+    }
+    addChild(child){
+        this.children.push(child);
+    }
+    removeChild(child){
+        this.children = this.children.filter(c => c.name != child.name)
+    }
+    getChild(index){
+        let child;
+        index < this.children.length 
+        ? child =  this.children[index]
+        : child = "Element not found"
+        return child;
+    }
+}
+
+function traverse(index, node) {
+    console.log(Array(index++).join("   ") + node.name);
+
+    for(let i=0; i<node.children.length; i++){
+        traverse(index, node.getChild(i));
+    }
+}
+
+(function run(){
+    var tree = new Node("root");
+    var left = new Node("left")
+    var right = new Node("right");
+    var leftleft = new Node("leftleft");
+    var leftright = new Node("leftright");
+    var rightleft = new Node("rightleft");
+    var rightright = new Node("rightright");
+ 
+    tree.addChild(left);
+    tree.addChild(right);
+    tree.removeChild(right);  // note: remove
+    tree.addChild(right);
+ 
+    left.addChild(leftleft);
+    left.addChild(leftright);
+ 
+    right.addChild(rightleft);
+    right.addChild(rightright);
+ 
+    traverse(1, tree);
+})();
+```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
 <br>
 
 ## #Behavioral Design Patterns
