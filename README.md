@@ -19,7 +19,7 @@
     -  [Adapter](#Adapter)
     - [Bridge](#Bridge)
     - [Composite](#Composite)
-    - Decorator
+    - [Decorator](#Decorator)
     - Facade
     - Flyweight
     - Proxy
@@ -35,6 +35,7 @@
     - Strategy
     - Template Method
     - Visitor
+<br>
 <br>
 <br>
 
@@ -315,6 +316,7 @@ class Manager {
 [**Back to top?**](#Categories-Of-Design-Pattern)
 <br>
 <br>
+<br>
 
 
 
@@ -442,7 +444,7 @@ var Audio = function () {
     this.zoom = function () { console.log("Sound volume up"); }
 };
  
-function run() {
+(function run() {
  
     var screen = new Screen();
     var audio = new Audio();
@@ -457,8 +459,7 @@ function run() {
     mouse.click();
     mouse.move();
     mouse.wheel();
-}
-run();
+})()
 ```
 [**Back to top?**](#Categories-Of-Design-Pattern)
 <br>
@@ -525,6 +526,58 @@ function traverse(index, node) {
 })();
 ```
 [**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
+## Decorator
+এটি একটি স্ট্রাকচারাল design pattern যা একটি object এর functionality কে ডায়নামিকালি বর্ধিত করে। এটি sub-classing এর একটি বিকল্প পদ্ধতি।
+জাভাস্ক্রিপ্টে decorator type behaviour কে ইমপ্লিমেন্ট করা খুবই সহজ কারন, জাভাস্ক্রিপ্ট আমাদের কোনো একটা অব্জেক্টে ডায়নামিকালি মেথড বা প্রপ্পার্টি add করার অবকাশ দেয়।
+
+আমরা যেটা করতে পারি তা হলো, অব্জেক্টে সরাসরি মেথড বা প্রোপার্টি add করতে পারি। কিন্তু এটি করলে তা efficiently reusable হয় না। এজন ব্যবহার করা হয় [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841)
+
+### Example
+এখানে আমরা একটি Book object এবং দুইটি ডেকরেটর ব্যবহার করবো। যেখানে ডেকরেটরগুলো প্যারামিটার হিসেবে গ্রহন করবে Book object আর রিটার্ন করবে ডেকরেটেড Book object
+
+```javaScript
+const Book = function(title, author, price){
+    this._title = title;
+    this._author = author;
+    this.price = price;
+
+    this.getDetails = function(){
+        return this._title + " by " + this._author;
+    }
+      
+}
+  
+// DECORATOR 1
+function giftWrap(book) {
+    book.isGiftWrapped = true;
+    book.unwrap = function() {
+        return "Unwrapped " + book.getDetails();
+    };
+
+    return book;
+}
+  
+// DECORATOR 2
+function hardbindBook(book) {
+    book.isHardbound = true;
+    book.price += 5;
+    return book;
+}
+
+const alchemist = giftWrap(new Book('The Alchemist', 'Paulo Coelho', 10));
+console.log(alchemist.isGiftWrapped); // true
+console.log(alchemist.unwrap()); // 'Unwrapped The Alchemist by Paulo Coelho'
+
+const inferno = hardbindBook(new Book('Inferno', 'Dan Brown', 15));
+console.log(inferno.isHardbound); // true
+console.log(inferno.price); // 20
+```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
+<br>
 <br>
 <br>
 
