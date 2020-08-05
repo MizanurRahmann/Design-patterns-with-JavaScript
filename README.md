@@ -20,7 +20,7 @@
     - [Bridge](#Bridge)
     - [Composite](#Composite)
     - [Decorator](#Decorator)
-    - Facade
+    - [Facade](#Facade)
     - Flyweight
     - Proxy
 * [**Behavioral**](#Behavioral-Design-Patterns)
@@ -576,6 +576,101 @@ console.log(inferno.price); // 20
 ```
 [**Back to top?**](#Categories-Of-Design-Pattern)
 <br>
+
+## Facade
+Façade pattern হলো আরেকটি স্ট্রাকচারাল ডিজাইন প্যাটার্ন যা, ক্লায়েন্টকে এক বা একের অধিক subsystems এর বিভিন্ন জটিল ফাংশনালিটি থেকে রক্ষা করে। বিভিন্ন multi-layer architecture system-গুলোতে এ প্যাটার্ন ব্যবহার করতে দেখা যায়।\
+সমন্বিত ও সহজ ইন্টারফেস দিতে পারে বলে, জাভাস্ক্রিপ্ট লাইব্রেরীগুলোতে এ প্যাটার্ন ব্যপকভাবে ব্যবহার করা হয়।
+
+যেমনঃ একটি multi-layer web application এ ক্লায়েন্ট আর সার্ভার এর মধ্যে আমাদের কম্যুনিকাশান এর জন্য বিভিন্ন ডাটা ক্রমাগত ডাটাবেজ থেকে fetch করতে হয়। আর এটা করা হয় well-defined API এর সাহায্যে। এই API (বা façade) বিভিন্ন business objects এবং তাদের interaction কে হাইড করে রাখে।
+
+<p align="center"><img src='./images/Facade.png'/></p>
+
+### Example
+<code>ProductComplaints</code> ও <code>ServiceComplaints</code> দুইটা ক্লাস <code>Complaints</code> ক্লাসকে extends করে। ফলে এই দুইটি ক্লাস <code>Complaints</code> এর মেথড গুলো এক্সেস করতে পারবে। এই দুইটা ক্লাস এমনভাবে ডিজাইন করা যে, যদি এর instance না থেকে থাকে তবে নতুন instance তৈরী করবে। আর যদি আগে থেকেই এর instance থেকে থাকে, তবে নতুন করে আর instance তৈরী না করে আগের instance-এর জন্য তৈরী complaints array তেই নতুন কমপ্লেইন পুশ করবে।
+
+এখন আমরা একটি public facing API (<code>ComplaintRegistry</code>) তৈরী করবো। যা ক্লায়েন্টকে কোনো কমপ্লেইন করা সহজ করার জন্য শুধু একটি মেথড ব্যবহার করতে দিবে। আর এই মেথড internally <code>ProductComplaints</code> ও <code>ServiceComplaints</code> ক্লাসের ইন্সট্যান্স নিয়ন্ত্রন করবে ( কমপ্লেইন টাইপ এর উপর ভিত্তি করে )
+
+```javascript
+class Complaints{
+    constructor() {
+        this.complaints = [];
+    }
+    //Add complain
+    addComplaint(complaint) {
+        this.complaints.push(complaint);
+        return this.replyMessage(complaint);
+    }
+    //find a complain
+    getComplaint(id) {
+        return this.complaints.find(complaint => complaint.id === id);
+    }
+    replyMessage(complaint) {}
+}
+
+//FOR PRODUCT COMPLAINTS
+class ProductComplaints extends Complaints {
+    constructor() {
+      super();
+      if (ProductComplaints.exists) {
+        return ProductComplaints.instance;
+      }
+      ProductComplaints.instance = this;
+      ProductComplaints.exists = true;
+      return this;
+    }
+  
+    replyMessage({ id, customer, details }) {
+      return `Complaint No. ${id} reported by ${customer} regarding ${details} have been filed with the Products Complaint Department. Replacement/Repairment of the product as per terms and conditions will be carried out soon.`;
+    }
+}
+
+//FOR SERVICFE COMPLAINTS
+class ServiceComplaints extends Complaints {
+    constructor() {
+      super();
+      if (ServiceComplaints.exists) {
+        return ServiceComplaints.instance;
+      }
+      ServiceComplaints.instance = this;
+      ServiceComplaints.exists = true;
+      return this;
+    }
+  
+    replyMessage({ id, customer, details }) {
+      return `Complaint No. ${id} reported by ${customer} regarding ${details} have been filed with the Service Complaint Department. The issue will be resolved or the purchase will be refunded as per terms and conditions.`;
+    }
+}
+
+//FACADE (OR PUBLIC API)
+let currentId = 0;
+
+class ComplaintRegistry {
+  registerComplaint(customer, type, details) {
+    const id = ComplaintRegistry._uniqueIdGenerator();
+    let registry;
+    if (type === 'service') {
+      registry = new ServiceComplaints();
+    } else {
+      registry = new ProductComplaints();
+    }
+    return registry.addComplaint({ id, customer, details });
+  }
+
+  static _uniqueIdGenerator() {
+    return ++currentId;
+  }
+}
+
+
+const registry = new ComplaintRegistry();
+
+const reportService = registry.registerComplaint('Martha', 'service', 'availability');
+const reportProduct = registry.registerComplaint('Jane', 'product', 'faded color');
+```
+
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
 
 <br>
 <br>
