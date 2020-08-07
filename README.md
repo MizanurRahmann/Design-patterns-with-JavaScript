@@ -1,5 +1,5 @@
 # What is Design Pattern?
-কোনো application তৈরী করার সময়, আমরা ভিন্ন ভিন্ন জায়গায় কিছু একই রকম সমস্যার সম্মুখীনন হলে, সমস্যাগুলোর সমাধান এর জন্য যদি একটা reusable pattern design করা যায়, যা ঐ সমস্যাগুলোর জন্য একটা ভালো সমাধান দিতে পারে। তবে advanced এই সমাধানকেই আমরা Design pattern বলি।
+কোনো application তৈরী করার সময়, আমরা ভিন্ন ভিন্ন জায়গায় কিছু একই রকম সমস্যার সম্মুখীন হলে, সমস্যাগুলোর সমাধান এর জন্য যদি একটা reusable pattern design করা যায়, যা ঐ সমস্যাগুলোর জন্য একটা ভালো সমাধান দিতে পারে। তবে advanced এই সমাধানকেই আমরা Design pattern বলি।
 সহজ কথায়, **Design pattern হলো একটা কমন সমস্যার জন্য তৈরী করা reusable সমাধান।** ডিজাইন প্যাটার্ন বোঝা বা এর সাথে পরিচিত হওয়াটা বেশ প্রয়োজন কেননাঃ 
 * Pattern হলো নির্দিষ্ট সমস্যার জন্য প্রমানিত সলুশান।
 * Application development processএর সময় এটা ছোটো খাটো issue থেকে বাচাতে সাহায্য করে যেটা ভবিষ্যতে application এর বড় ক্ষতি করতে পারতো
@@ -722,6 +722,46 @@ class Icecream {
 [**Back to top?**](#Categories-Of-Design-Pattern)
 <br>
 
+## Proxy
+Proxy pattern একটি অব্জেক্টের প্রতিনিধি অব্জেক্ট প্রাদান করে, যা ঐ অব্জেক্টের কোনো কিছু নিয়ন্ত্রন বা access করতে পারে।\
+এটি মূলত এমন অবস্থায় ব্যবহার করা হয় যখন, টার্গেট অব্জেক্টটি নির্মানাধীন (পুরোপুরি ভাবে তৈরী হয়নি। এমন তখনই হয় যখন অব্জেক্ট তৈরীর প্রক্রিয়ার বিভিন ডিপেন্ডেন্সি থাকে) অবস্থায় আছে। এ অবস্থায় একই ইন্টারফেসের একটি Proxy অব্জেক্ট তৈরী করা হয় যা ক্লায়েন্টকে টার্গেট অব্জেক্টের মতো কিছুক্ষন একই ধরনের ফ্যাসিলিটি দিতে থাকে। এবং যখন টার্গেট অবেজক্টটি তৈরীর প্রক্রিয়া শেষ হয়ে যায়, তখন ক্লায়েন্টের রিকুয়েস্টগুলো Proxy অব্জেক্ট থেকে ঐ টার্গেট অব্জেক্টে ফরওয়ার্ড করে দেয়।
+
+<p align="center"><img src='./images/Proxy.png'/></p>
+
+### Example
+মনে করি, <code>networkFetch</code> একটি নেটওয়ার্ক রিকুয়েস্ট ফাংশন। এটি প্যারামিটার হিসেবে URL নেয় এবং এই URL অনুযায়ী রিস্পন্স করে। এখন আমরা একটি Proxy অব্জেক্ট তৈরী করতে চাই যেটা নেটওয়ার্ক থেকে তখনই রিস্পন্স গ্রহন করবে যখন এর কোনো লিংক একটি গ্লোবাল cache মেমরিতে থাকবে না। কিন্তু, যদি নেটওয়ার্কের লিংক cache মেমরিতে থাকে তবে cache-থেকে রিস্পন্স গ্রহন করবে।\
+cache একটি গ্লোবাল ভ্যারিয়েবল যেটা বিভিন লিংক ষ্টোর করবে। আমরা Proxy অব্জেক্ট হিসেবে তৈরী করবো <code>proxiedNetworkFetch</code> আর <code>networkFetch</code> হবে আমাদের টার্গেট অব্জেক্ট।
+
+উল্লেখ্যঃ এখানে আমরা জাভাস্ক্রিপ্ট ES6 এর দুইটি ফিচার Proxy এবং Reflect ব্যবহারর করবো। যেখানে Proxy অব্জেক্টটি বিভিন্ন জাভাস্ক্রিপ্টের বিভিন্ন মৌলিক অপারেশনগুলোর custom behavior বর্ননা করার জন্য ব্যবহার করা হয়। একটি কন্সট্রাকটর ফাংশন কল করার মাধ্যমে Proxy অব্জেক্ট তৈরী করা হয় যেখানে কন্সট্রাকটরটি দুইটি প্যারামিটার গ্রহন করে <code>target</code> ও <code>handler</code>। মূলত handler দ্বারাই এ কাস্টমাইজেশন করা হয়।
+
+```javascript
+//Global chache memory
+const cache = [];
+
+//Target
+function networkFetch(url) {
+    return `${url} - Response from network`;
+}
+
+// Proxy
+const proxiedNetworkFetch = new Proxy(
+    networkFetch,
+    { 
+        apply(target, thisArg, args) {
+            const urlParam = args[0];
+            if (cache.includes(urlParam)) {
+                return `${urlParam} - Response from cache`;
+            } else {
+                cache.push(urlParam);
+                return Reflect.apply(target, thisArg, args);
+            }
+        },
+    }
+);
+
+console.log(proxiedNetworkFetch('dogPic.jpg')); // 'dogPic.jpg - Response from network'
+console.log(proxiedNetworkFetch('dogPic.jpg')); // 'dogPic.jpg - Response from cache'
+```
 
 <br>
 <br>
