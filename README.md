@@ -22,10 +22,10 @@
     - [Decorator](#Decorator)
     - [Facade](#Facade)
     - [Flyweight](#Flyweight)
-    - Proxy
+    - [Proxy](#Proxy)
 * [**Behavioral**](#Behavioral-Design-Patterns)
-    - Chain of Resp
-    - Command
+    - [Chain of Responsibility](#Chain-of-Responsibility)
+    - [Command](#Command)
     - Interpreter
     - Iterator
     - Mediator
@@ -35,10 +35,8 @@
     - Strategy
     - Template Method
     - Visitor
-<br>
-<br>
-<br>
 
+<br><br><p align="center"> <hr width="80%"></p><br><br>
 
 # #Creational Design Patterns
 Creational pattern মূলত object তৈরীর মেকানিজমগুলোর নিয়ন্ত্রন প্রক্রিয়ার উপর ফোকাস করে।
@@ -314,10 +312,9 @@ class Manager {
   console.log(gutibajSalam.getManagerName());
 ```
 [**Back to top?**](#Categories-Of-Design-Pattern)
-<br>
-<br>
-<br>
 
+
+<br><br><p align="center"> <hr width="80%"></p><br><br>
 
 
 # #Structural Design Patterns
@@ -762,10 +759,80 @@ const proxiedNetworkFetch = new Proxy(
 console.log(proxiedNetworkFetch('dogPic.jpg')); // 'dogPic.jpg - Response from network'
 console.log(proxiedNetworkFetch('dogPic.jpg')); // 'dogPic.jpg - Response from cache'
 ```
-
-<br>
-<br>
+[**Back to top?**](#Categories-Of-Design-Pattern)
 <br>
 
-## #Behavioral Design Patterns
+<br><br><p align="center"> <hr width="80%"></p><br><br>
+
+# #Behavioral Design Patterns
 Behavorial pattern একটা system-এ থাকা বিভিন্ন object গুলোর মধ্যে সম্পর্ক এবং যোগাযোগ পদ্ধতিকে improve করার চেষ্টা করে। এই ক্যাটাগরীর অন্তর্ভূক্ত pattern গুলো হলোঃ Chain of Resp, Command, Interpreter, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor.
+
+## Chain of Responsibility
+এটি একটি behavioural design pattern যা মূলত বিভিন্ন loosely coupled object গুলোর জন্য একটি চেইন প্রদান করে থাকে। যেখানে অব্জেক্টগুলো ক্লায়েন্টের বিভিন্ন ধরনের রিকুয়েস্টের জন্য কাজ করতে পারে।
+
+Chain of Responsibility এর একটি ভালো উদাহরন হলোঃ DOM-এ ইভেন্ট বাবলিং। যেখানে কোনো একটা ইভেন্ট অনেকগুলো নেস্টেড DOM এর মধ্যে দিয়ে প্রসারিত হতে থাকে। এবং ঐ DOM-গুলোর মধ্যে কোনো একটি এলিমেন্টে নির্দিষ্ট ইভেন্টির জন্য 'ইভেন্ট লিসেনার' থাকে, যা নির্দিষ্ট ইভেন্টি পেলে একটি নির্দিষ্ট কাজ করে।
+
+### Example
+করিম সাহেবের কারখানার প্রতিটা কর্মির গতো কয়েক মাসের বেতন যোগ করার জন্য আমরা একটা অব্জেক্ট তৈরী করতে পারি। যেটি নিচের মতো হবে। যেখানে অব্জেক্টটির একটি ফাংশন বেতন যোগ করে, নিজেকেই (যে অব্জেক্টের বেতন যোগ হলো তাকেই) রিটার্ন করবে।
+```javascript
+class CumulativeSum {
+  constructor(intialValue = 0) {
+    this.salary = intialValue;
+  }
+
+  add(value) {
+    this.salary += value;
+    return this;
+  }
+}
+
+// usage
+const sum1 = new CumulativeSum();
+console.log(sum1.add(10).add(20).add(30).salary); // 60
+
+const sum2 = new CumulativeSum(100);
+console.log(sum2.add(10).add(20).add(5).salary); // 135
+```
+[**Back to top?**](#Categories-Of-Design-Pattern)
+<br>
+
+## Command
+Command প্যাটার্ন, বিভিন্ন action কে অব্জেক্টরূপে encapsulate করে।\
+যে অব্জেক্টগুলো রিকুয়েস্ট ইস্যু করে তাদের থেকে, রিকুয়েস্ট প্রসেস করে এমন অব্জেক্ট আলাদা করার মাধ্যমে এই প্যাটার্ন একটি সিস্টেমকে loosely coupled করে।
+
+যেমন মনে করি আমরা একটি এপ্লিকেশন বানাতে চাচ্ছি যেটা একই সাথে Cut, Copy, এবং Paste সাপোর্ট করে। এখন এই কাজগুলো (actions) ট্রিগার দুইভাবে করতে পারি। (১) মেনু সিস্টেম ব্যবহার করে [যেমন মাউসের রাইট বাটনে ক্লিক করলে মেনু দেখাবে যেখানে কপি, পেস্ট, কাট এর অপশন থাকবে] অথবা (২) কিবোর্ড শর্টকার্ট ব্যবহার করে।
+
+এখন আমরা যদি এটাকে implement করতে Command প্যাটার্ন ব্যবহার করি, তবে প্রতিটা অপারেশন প্রতিটা actions processing এর জন্য ব্যবহার হবে। সুতরাং তখন, সকল Cut requests এর জন্য আমাদের শুধু একটি কমান্ড প্রয়োজন হবে একই ভাবে সকল Copy requests এর জন্য একটা এবং সকল Paste requests এর জন্য একটা কমান্ড প্রয়োজন হবে।
+
+কিন্তু কেনো? কারন, Command সকল actions processing কে centralize করে।
+
+### Example
+```javascript
+class SpecialMath {
+    constructor(num){
+        this._num = num;
+    }
+  
+    square() { return this._num ** 2; }
+    cube() { return this._num ** 3; }
+    squareRoot() { return Math.sqrt(this._num); }
+}
+  
+class Command {
+    constructor(subject) {
+      this._subject = subject;
+      this.commandsExecuted = [];
+    }
+    
+    execute(command) {
+      this.commandsExecuted.push(command);
+      return this._subject[command]();
+    }
+}
+  
+const x = new Command(new SpecialMath(5));
+x.execute('square');
+x.execute('cube');
+
+console.log(x.commandsExecuted); // ['square', 'cube']
+```
